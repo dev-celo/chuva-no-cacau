@@ -1,0 +1,45 @@
+@font-face {
+  font-family: 'EleganceSerif';
+  src: url('/fonts/elegance-serif.ttf');
+}
+
+.bg-wood-texture {
+  background: url('/textures/wood-luxury-texture.png'); /* Caminho da imagem gerada */
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+
+.nav-link {
+  color: #ffffff;
+  font-family: 'EleganceSerif', serif;
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+  color: #ccb010;
+}
+
+.link-underline {
+  position: absolute;
+  bottom: -2px;
+  left: 15%;
+  width: 70%;
+  height: 2px;
+  background-color: #FFD700;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.nav-link:hover .link-underline {
+  opacity: 1;
+}
+
+
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
