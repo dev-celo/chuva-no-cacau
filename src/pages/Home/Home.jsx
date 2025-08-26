@@ -1,3 +1,4 @@
+import UltimasNoticias from "../../components/UltimasNoticias/UltimasNoticias";
 import ClimaAtual from "../../components/ClimaAtual/ClimaAtual";
 import Cotacao from "../../components/Cotacao/Cotacao";
 import NoticiasRecentes from "../../components/NoticiasRecentes/NoticiasRecentesSidebar";
@@ -51,31 +52,7 @@ export default function Home() {
         </div>
 
         {/* Seção de Posts Simplificada */}
-        <section className="bg-white rounded-2xl shadow-sm p-6">
-          <h2 className="text-2xl font-bold mb-6 pb-2 border-b border-neutral-100">Últimas Notícias</h2>
-          <div className="space-y-6">
-            <article className="flex flex-col md:flex-row gap-6 border-b border-neutral-100 last:border-b-0">
-              <div className="md:w-1/4">
-                <div className="h-40 bg-neutral-200 animate-pulse rounded-xl"></div>
-              </div>
-              <div className="md:w-3/4 space-y-2">
-                <div className="h-6 bg-neutral-200 animate-pulse rounded w-3/4"></div>
-                <div className="h-4 bg-neutral-200 animate-pulse rounded w-full"></div>
-                <div className="h-4 bg-neutral-200 animate-pulse rounded w-2/3"></div>
-              </div>
-            </article>
-            <article className="flex flex-col md:flex-row gap-6 border-b border-neutral-100 last:border-b-0">
-              <div className="md:w-1/4">
-                <div className="h-40 bg-neutral-200 animate-pulse rounded-xl"></div>
-              </div>
-              <div className="md:w-3/4 space-y-2">
-                <div className="h-6 bg-neutral-200 animate-pulse rounded w-3/4"></div>
-                <div className="h-4 bg-neutral-200 animate-pulse rounded w-full"></div>
-                <div className="h-4 bg-neutral-200 animate-pulse rounded w-2/3"></div>
-              </div>
-            </article>
-          </div>
-        </section>
+        <UltimasNoticias />
 
         {/* Seção de Informações (Cotação + Clima + Notícias Recentes) */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
