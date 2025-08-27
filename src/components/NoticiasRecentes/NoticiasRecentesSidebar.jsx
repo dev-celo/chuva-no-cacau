@@ -49,7 +49,7 @@ const NoticiasRecentes = () => {
       <div className="space-y-4 cursor-pointer">
         {noticias.slice(0, visibleCount).map((item, index) => (
           <div
-            key={index}
+            key={item.id}
             className="group transition-all hover:bg-amber-50/50 rounded-lg p-3 border-b border-gray-100 last:border-0"
           >
             <div className="flex items-start gap-3">
