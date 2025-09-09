@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 
 export default function SobreChuvaNoCacau() {
   return (
-    <section className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center px-6 md:px-16 py-20 bg-gradient-to-br from-emerald-50 to-emerald-100">
+    <section className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center px-6 md:px-16 py-20">
       {/* Texto */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}

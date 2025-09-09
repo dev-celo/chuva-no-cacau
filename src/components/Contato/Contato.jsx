@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 
 export default function ContatoChuvaNoCacau() {
   return (
-    <section className="px-6 md:px-16 py-20 bg-gradient-to-br from-emerald-50 to-emerald-100">
+    <section className="px-6 md:px-16 py-20">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
