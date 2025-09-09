@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
+import "./UltimasNoticias.css";
 
 const UltimasNoticias = () => {
   const [posts, setPosts] = useState([]);
@@ -7,16 +8,19 @@ const UltimasNoticias = () => {
   const [lastDocId, setLastDocId] = useState(null);
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
-  const [isMdUp, setIsMdUp] = useState(window.innerWidth >= 768);
+
+  // wrapper para observar os artigos
+  const listRef = useRef(null);
 
   const fetchPosts = async (reset = false) => {
     if (loading) return;
     setLoading(true);
 
     try {
-      const url = lastDocId && !reset
-        ? `http://localhost:3001/api/posts?lastDocId=${lastDocId}`
-        : `http://localhost:3001/api/posts`;
+      const url =
+        lastDocId && !reset
+          ? `http://localhost:3001/api/posts?lastDocId=${lastDocId}`
+          : `http://localhost:3001/api/posts`;
 
       const res = await fetch(url);
       const data = await res.json();
@@ -29,7 +33,7 @@ const UltimasNoticias = () => {
       if (reset) {
         setPosts(data.posts);
       } else {
-        setPosts(prev => [...prev, ...data.posts]);
+        setPosts((prev) => [...prev, ...data.posts]);
       }
 
       setLastDocId(data.lastDocId);
@@ -41,12 +45,56 @@ const UltimasNoticias = () => {
     }
   };
 
+  // Função que inicia observers nos cards (fallback)
+  useEffect(() => {
+    if (!listRef.current) return;
+
+    // Selecta todos os artigos .small-screen
+    const articles = Array.from(listRef.current.querySelectorAll(".small-screen"));
+
+    // Cria um ResizeObserver para cada artigo (se suportado)
+    const observers = [];
+
+    if (typeof ResizeObserver !== "undefined") {
+      articles.forEach((el) => {
+        // evita criar múltiplos observers no mesmo elemento
+        if (el.__ro) return;
+
+        const ro = new ResizeObserver((entries) => {
+          for (const entry of entries) {
+            // obtém largura inline do entry (compatível com contentBoxSize ou contentRect)
+            let inlineSize = entry.contentRect?.width;
+            if (entry.contentBoxSize) {
+              const box = Array.isArray(entry.contentBoxSize) ? entry.contentBoxSize[0] : entry.contentBoxSize;
+              inlineSize = box.inlineSize ?? inlineSize;
+            }
+
+            if (inlineSize <= 350) el.classList.add("small-screen--narrow");
+            else el.classList.remove("small-screen--narrow");
+          }
+        });
+
+        ro.observe(el);
+        el.__ro = ro;
+        observers.push(ro);
+      });
+    }
+
+    // cleanup
+    return () => {
+      observers.forEach((o) => o.disconnect());
+      articles.forEach((el) => {
+        if (el.__ro) {
+          el.__ro.disconnect();
+          delete el.__ro;
+        }
+      });
+    };
+  }, [posts]); // re-observe sempre que posts mudarem
+
+  // fetch inicial
   useEffect(() => {
     fetchPosts(true);
-
-    const handleResize = () => setIsMdUp(window.innerWidth >= 768);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   return (
@@ -55,49 +103,68 @@ const UltimasNoticias = () => {
         Últimas Notícias
       </h2>
 
-      <div className="space-y-4 md:space-y-6">
-        {posts.map(post => (
-          <Link key={post.id} to={`/noticias/${post.id}`} className="hover:text-blue-600">
-            <article className="flex flex-col gap-4 md:gap-6 border-b border-dashed border-neutral-200 last:border-b-0 pb-4 md:pb-6 cursor-pointer">
-              
-              {/* Imagem sempre em cima */}
-              <div className="w-full flex-shrink-0">
+      {/* wrapper observado */}
+      <div className="space-y-6" ref={listRef}>
+        {posts.map((post) => (
+          <Link
+            key={post.id}
+            to={`/noticias/${post.id}`}
+            className="group block"
+            aria-label={`Abrir notícia ${post.titulo}`}
+          >
+            {/* NOTE: removi md:flex-row (viewport) e deixei controle via CSS/container query/fallback */}
+            <article className="small-screen flex gap-4 border-b border-dashed border-neutral-200 last:border-b-0 pb-6 cursor-pointer hover:bg-neutral-50 rounded-xl p-2 transition">
+              {/* imagem com classe específica */}
+              <div className="post-image-wrapper">
                 {post.imagem ? (
                   <img
                     src={post.imagem}
                     alt={post.titulo}
-                    className="h-32 md:h-40 w-full object-cover rounded-xl"
+                    className="post-image"
+                    loading="lazy"
                   />
                 ) : (
-                  <div className="h-32 md:h-40 bg-neutral-100 rounded-xl w-full"></div>
+                  <div className="post-image post-image--placeholder" />
                 )}
               </div>
 
-              <div className="w-full space-y-1 md:space-y-2">
-                <h3 className="text-md md:text-lg font-semibold">{post.titulo}</h3>
-                <p className="text-sm md:text-base text-neutral-600">{post.subtitulo}</p>
-                <p className="text-xs md:text-sm text-neutral-500 italic">
-                  {new Date(post.data).toLocaleDateString("pt-BR")}
+              {/* conteúdo */}
+              <div className="post-content flex-1">
+                <h3 className="text-lg font-semibold group-hover:text-amber-600 transition">
+                  {post.titulo}
+                </h3>
+
+                <p className="text-sm text-neutral-600 line-clamp-2">
+                  {post.subtitulo}
                 </p>
 
-                {/* Somente mostra chamadaNoticia em md+ */}
-                {isMdUp && post.chamadaNoticia && (
-                  <p className="text-sm md:text-base text-neutral-600 border-l-2 border-neutral-300 pl-2">
-                    {post.chamadaNoticia}
+                <div className="mt-3 flex flex-col">
+                  <p className="text-xs text-neutral-500 italic">
+                    {new Date(post.data).toLocaleDateString("pt-BR")}
                   </p>
-                )}
+
+                  {/* chamada que será escondida por CSS quando o card for estreito (<=350px) */}
+                  {post.chamadaNoticia && (
+                    <span className="post-callout mt-2 text-sm text-neutral-700 border-l-2 border-amber-100 pl-2">
+                      {post.chamadaNoticia}
+                    </span>
+                  )}
+                </div>
               </div>
             </article>
           </Link>
         ))}
       </div>
 
-      <div className="flex flex-col md:flex-row justify-center mt-4 md:mt-6 gap-2 md:gap-4">
+      <div className="flex flex-col md:flex-row justify-center mt-6 gap-3">
         {hasMore && (
           <button
-            onClick={() => { setPage(prev => prev + 1); fetchPosts(); }}
+            onClick={() => {
+              setPage((prev) => prev + 1);
+              fetchPosts();
+            }}
             disabled={loading}
-            className="w-full md:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg cursor-pointer"
+            className="w-full md:w-auto px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition"
           >
             {loading ? "Carregando..." : "Ver mais"}
           </button>
@@ -105,8 +172,12 @@ const UltimasNoticias = () => {
 
         {page > 1 && (
           <button
-            onClick={() => { setPage(1); setLastDocId(null); fetchPosts(true); }}
-            className="w-full md:w-auto px-4 py-2 bg-gray-500 text-white rounded-lg cursor-pointer"
+            onClick={() => {
+              setPage(1);
+              setLastDocId(null);
+              fetchPosts(true);
+            }}
+            className="w-full md:w-auto px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition"
           >
             Ver menos
           </button>
