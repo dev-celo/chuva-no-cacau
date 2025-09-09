@@ -10,6 +10,9 @@ export default {
         sans: ['"Open Sans"', 'sans-serif'],
         display: ['"Playfair Display"', 'serif'],
       },
+      screens: {
+        'xs': {'max': '350px'},
+      },
     },
   },
   plugins: [],
