@@ -35,7 +35,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="bg-neutral-900 text-white py-10 px-6 mt-12">
+    <footer className="bg-neutral-900 text-white py-10 px-6">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 border-t border-neutral-700 pt-8">
         {footerData.map((section) => (
           <div key={section.title}>
