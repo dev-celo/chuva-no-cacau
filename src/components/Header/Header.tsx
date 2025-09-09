@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -44,19 +45,20 @@ const Header = () => {
           />
 
           {/* BOTÃO ÚNICO */}
-          <button className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold px-4 py-2 rounded text-sm">
-            Valor do Cacau
-          </button>
-
+          <Link to="/valor-do-cacau">
+            <button className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold px-4 py-2 rounded text-sm">
+              Valor do Cacau
+            </button>
+          </Link>
           {/* LINKS */}
           <nav className="flex space-x-6 text-xl items-center">
-            {["Início", "Notícias", "Sobre", "Contato"].map((item) => (
+            {[{campo: "Início", href: "/"}, {campo: "Notícias", href: "/noticias"}, {campo: "Sobre", href: "/sobre"}, {campo: "Contato", href: "/contato"}].map((item) => (
               <a
-                key={item}
-                href="#"
+                key={item.campo}
+                href={item.href}
                 className="relative inline-block text-white transition duration-300 ease-out transform hover:scale-105"
               >
-                {item}
+                {item.campo}
               </a>
             ))}
           </nav>
