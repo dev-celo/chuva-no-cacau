@@ -1,0 +1,70 @@
+.small-screen {
+  display: flex;
+  flex-direction: row;      /* padrão = imagem à esquerda */
+  gap: 1rem;
+  align-items: flex-start;
+  padding: 0.5rem;
+  container-type: inline-size; /* ativa container queries para este elemento */
+}
+
+/* imagem lateral padrão */
+.small-screen .post-image,
+.small-screen .post-image--placeholder {
+  width: 12rem;     /* largura lateral fixa */
+  height: 8rem;     /* altura lateral fixa */
+  object-fit: cover;
+  border-radius: 0.5rem;
+  flex-shrink: 0;
+  background-color: #f3f4f6; /* fallback placeholder bg */
+}
+
+/* conteúdo */
+.small-screen .post-content {
+  display: block;
+}
+
+/* callout (chamada) -- será escondida automaticamente em cards estreitos */
+.post-callout {
+  display: inline-block;
+}
+
+/* ---------- Container Query: se o PRÓPRIO card fizer <= 350px, vira coluna ---------- */
+@container (max-width: 350px) {
+  .small-screen {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .small-screen .post-image,
+  .small-screen .post-image--placeholder {
+    width: 100%;
+    height: 9rem; /* imagem maior em cima */
+  }
+
+  /* esconde a chamada para não poluir o card pequeno */
+  .post-callout {
+    display: none;
+  }
+}
+
+/* ---------- Fallback CSS para o JS ResizeObserver (quando container queries não existirem) ---------- */
+/* O ResizeObserver adiciona a classe .small-screen--narrow ao article. */
+.small-screen.small-screen--narrow {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.small-screen.small-screen--narrow .post-image,
+.small-screen.small-screen--narrow .post-image--placeholder {
+  width: 100%;
+  height: 9rem;
+}
+
+.small-screen.small-screen--narrow .post-callout {
+  display: none;
+}
+
+/* Pequenos ajustes visuais */
+.small-screen:hover {
+  background-color: #f8fafc;
+}

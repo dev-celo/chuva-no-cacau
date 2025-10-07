@@ -1,16 +1,24 @@
+import PaginaNoticias from "./pages/PageNoticias/PageNoticias";
 import Home from "./pages/Home/Home";
-import Footer from "./components/Footer/Footer";
-import Header from "./components/Header/Header";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import NoticiaDetalhe from "./pages/PageNoticias/NoticiaDetalhe";
+import PageSobre from "./pages/PageSobre/PageSobre";
+import PageContato from "./pages/PageContato/PageContato";
+import PageValorCacau from "./pages/PageValorCacau/PageValorCacau";
 
 function App() {
   return (
-    <div className="bg-[#F5F5DC] min-h-screen flex flex-col justify-between">
-      <Header />
-      <main className="flex-grow max-w-7xl mx-auto py-10 px-4 text-[#3E2723]">
-        <Home />
-      </main>
-      <Footer />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/noticias" element={<PaginaNoticias />} />
+        <Route path="/sobre" element={<PageSobre />} />
+        <Route path="/contato" element={<PageContato />} />
+        <Route path="/contato" element={<PageContato />} />
+        <Route path="/valor-do-cacau" element={<PageValorCacau />} />
+        <Route path="/noticias/:id" element={<NoticiaDetalhe />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
