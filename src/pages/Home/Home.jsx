@@ -4,11 +4,31 @@ import UltimasNoticias from "../../components/UltimasNoticias/UltimasNoticias";
 import ClimaAtual from "../../components/ClimaAtual/ClimaAtual";
 import Cotacao from "../../components/Cotacao/Cotacao";
 import NoticiasRecentes from "../../components/NoticiasRecentes/NoticiasRecentesSidebar";
+import { useEffect, useState } from "react";
 
 export default function Home() {
+  const [destaques, setDestaques] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:3001/api/posts")
+      .then(res => res.json())
+      .then(data => {
+        const posts = data?.posts || [];
+
+        const postsFiltrados = posts.filter((p) => p.destaque === true)
+
+        setDestaques(postsFiltrados)
+      })
+  }, [])
+
+  const destaquePrincipal = destaques.length > 0 ? destaques[0] : null;
+  const outrosDestaques = destaques.length > 1 ? destaques.slice(1, 3) : [];
+
+
+
   return (
     <div className="flex flex-col min-h-screen bg-neutral-50 text-neutral-900">
-      
+
       {/* Header */}
       <Header />
 
@@ -16,54 +36,63 @@ export default function Home() {
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
 
         {/* Destaque Principal */}
-        <section className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-all overflow-hidden">
-          <div className="h-64 md:h-80 bg-gradient-to-r from-amber-500 to-amber-700 relative">
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6 text-white">
-              <span className="bg-amber-500 text-white text-sm px-3 py-1 rounded-full font-medium">Destaque</span>
-              <h2 className="text-2xl md:text-3xl font-bold mt-2">
-                Preço do cacau atinge máxima histórica com seca na África Ocidental
-              </h2>
-              <p className="mt-2 text-neutral-100">
-                Produtores brasileiros se preparam para aumentar exportações enquanto principais competidores enfrentam crise climática.
-              </p>
-              <div className="flex items-center mt-4 text-sm">
-                <span className="bg-black/20 px-2 py-1 rounded">Por João Silva</span>
-                <span className="mx-2">•</span>
-                <span>Há 2 horas</span>
+        {
+          destaquePrincipal && (
+            <section
+              key={destaquePrincipal.id}
+              className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-all overflow-hidden"
+            >
+              <div
+                className="h-64 md:h-80 bg-cover bg-center relative"
+                style={{
+                  backgroundImage: `url(${destaquePrincipal.imagem || '/fallback.jpg'})`,
+                }}
+              >
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6 text-white">
+                  <span className="bg-amber-500 text-white text-sm px-3 py-1 rounded-full font-medium">
+                    Destaque
+                  </span>
+                  <h2 className="text-2xl md:text-3xl font-bold mt-2">
+                    {destaquePrincipal.titulo}
+                  </h2>
+                  <p className="mt-2 text-neutral-100">{destaquePrincipal.subtitulo}</p>
+                  <div className="flex items-center mt-4 text-sm">
+                    <span className="bg-black/20 px-2 py-1 rounded">
+                      Por {destaquePrincipal.autor || "Redação"}
+                    </span>
+                    <span className="mx-2">•</span>
+                    <span>{destaquePrincipal.data || "Hoje"}</span>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        </section>
+            </section>
+          )
+        }
 
-        {/* Grid de Notícias em destaque */}
+
+        {/* Grid de Notícias em Destaque */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <article className="bg-white rounded-2xl shadow-sm hover:shadow-md overflow-hidden transition-shadow">
-            <div className="h-48 bg-gradient-to-r from-emerald-400 to-emerald-600"></div>
-            <div className="p-6">
-              <h3 className="text-xl font-bold mb-2">Tecnologia aumenta produtividade do cacau em 35%</h3>
-              <p className="text-neutral-600 mb-4">
-                Novas técnicas de cultivo e monitoramento estão revolucionando a produção cacaueira no Brasil.
-              </p>
-              <div className="flex justify-between items-center text-sm text-neutral-500">
-                <span>Há 5 horas</span>
-                <span className="font-medium text-emerald-700">Leia mais →</span>
+          {outrosDestaques.map((noticia) => (
+            <article
+              key={noticia.id}
+              className="bg-white rounded-2xl shadow-sm hover:shadow-md overflow-hidden transition-shadow"
+            >
+              <div
+                className="h-48 bg-cover bg-center"
+                style={{
+                  backgroundImage: `url(${noticia.imagem || '/fallback.jpg'})`,
+                }}
+              ></div>
+              <div className="p-6">
+                <h3 className="text-xl font-bold mb-2">{noticia.titulo}</h3>
+                <p className="text-neutral-600 mb-4">{noticia.subtitulo}</p>
+                <div className="flex justify-between items-center text-sm text-neutral-500">
+                  <span>{noticia.data || "Hoje"}</span>
+                  <span className="font-medium text-emerald-700">Leia mais →</span>
+                </div>
               </div>
-            </div>
-          </article>
-
-          <article className="bg-white rounded-2xl shadow-sm hover:shadow-md overflow-hidden transition-shadow">
-            <div className="h-48 bg-gradient-to-r from-blue-400 to-blue-600"></div>
-            <div className="p-6">
-              <h3 className="text-xl font-bold mb-2">Exportação de cacau brasileiro cresce 22% no último trimestre</h3>
-              <p className="text-neutral-600 mb-4">
-                Dados divulgados pelo Ministério da Agricultura mostram aumento significativo nas exportações.
-              </p>
-              <div className="flex justify-between items-center text-sm text-neutral-500">
-                <span>Há 7 horas</span>
-                <span className="font-medium text-blue-700">Leia mais →</span>
-              </div>
-            </div>
-          </article>
+            </article>
+          ))}
         </div>
 
         {/* Seção de Últimas Notícias */}
@@ -71,7 +100,7 @@ export default function Home() {
 
         {/* Grid de Informações: Cotação + Clima + Notícias Recentes */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          
+
           {/* Cotação e Clima */}
           <section className="lg:col-span-2 bg-white shadow-sm rounded-2xl p-6 hover:shadow-md transition-shadow space-y-6">
             <div>
