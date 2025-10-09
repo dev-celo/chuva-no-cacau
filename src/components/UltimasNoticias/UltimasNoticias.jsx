@@ -30,10 +30,13 @@ const UltimasNoticias = () => {
         return;
       }
 
-      if (reset) {
-        setPosts(data.posts);
+      const postsFiltrados = data.posts
+        .filter((post, index) => !(post.destaque === true && index < 3));
+
+      if(reset) {
+        setPosts(postsFiltrados);
       } else {
-        setPosts((prev) => [...prev, ...data.posts]);
+        setPosts((prev) => [...prev, ...postsFiltrados])
       }
 
       setLastDocId(data.lastDocId);
