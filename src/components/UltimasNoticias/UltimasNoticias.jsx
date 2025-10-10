@@ -31,7 +31,10 @@ const UltimasNoticias = () => {
       }
 
       const postsFiltrados = data.posts
-        .filter((post, index) => !(post.destaque === true && index < 3));
+        .filter((post, index) => !(post.destaque === true && index > 3));
+
+        console.log(postsFiltrados);
+        
 
       if(reset) {
         setPosts(postsFiltrados);
