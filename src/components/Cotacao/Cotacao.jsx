@@ -82,7 +82,7 @@ const Cotacao = () => {
           } font-bold text-lg flex items-center`}
         >
           {cotacao.variacao.toFixed(2)} {cotacao.moeda} (
-          {(cotacao.variacao_percentual * 100).toFixed(2)}%)
+          {(cotacao.variacao_percentual).toFixed(2)}%)
           {isAlta ? (
             <ArrowUpRight className="ml-1" size={18} />
           ) : (

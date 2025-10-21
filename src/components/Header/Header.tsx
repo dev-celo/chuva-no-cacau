@@ -9,13 +9,13 @@ const Header = () => {
     <header className="bg-neutral-900 text-white px-6 py-3 sticky top-0 z-50 shadow-md">
       <div className="flex items-center justify-between w-full">
         {/* LOGO */}
-        <div className="flex items-center">
+        <a href="/" className="flex items-center">
           <img
             src="/logo-chuva-no-cacau-gota-de-agua-caindo-em-cacau.png"
             alt="Logo chuva no cacau com uma gota d'agua caindo em uma cabaça de cacau"
             className="logo ml-2"
           />
-        </div>
+        </a>
 
         {/* HAMBURGUER MENU - MOBILE */}
         <div className="md:hidden">
