@@ -5,6 +5,7 @@ import ClimaAtual from "../../components/ClimaAtual/ClimaAtual";
 import Cotacao from "../../components/Cotacao/Cotacao";
 import NoticiasRecentes from "../../components/NoticiasRecentes/NoticiasRecentesSidebar";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 export default function Home() {
   const [destaques, setDestaques] = useState([]);
@@ -38,63 +39,67 @@ export default function Home() {
         {/* Destaque Principal */}
         {
           destaquePrincipal && (
-            <section
-              key={destaquePrincipal.id}
-              className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-all overflow-hidden"
-            >
-              <div
-                className="h-64 md:h-80 bg-cover bg-center relative"
-                style={{
-                  backgroundImage: `url(${destaquePrincipal.imagem || '/fallback.jpg'})`,
-                }}
+            <section className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-all overflow-hidden">
+              <Link
+                key={destaquePrincipal.id}
+                to={`/noticias/${destaquePrincipal.id}`}
               >
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6 text-white">
-                  <span className="bg-amber-500 text-white text-sm px-3 py-1 rounded-full font-medium">
-                    Destaque
-                  </span>
-                  <h2 className="text-2xl md:text-3xl font-bold mt-2">
-                    {destaquePrincipal.titulo}
-                  </h2>
-                  <p className="mt-2 text-neutral-100">{destaquePrincipal.subtitulo}</p>
-                  <div className="flex items-center mt-4 text-sm">
-                    <span className="bg-black/20 px-2 py-1 rounded">
-                      Por {destaquePrincipal.autor || "Redação"}
+                <div
+                  className="h-64 md:h-80 bg-cover bg-center relative"
+                  style={{
+                    backgroundImage: `url(${destaquePrincipal.imagem || '/fallback.jpg'})`,
+                  }}
+                >
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6 text-white">
+                    <span className="bg-amber-500 text-white text-sm px-3 py-1 rounded-full font-medium">
+                      Destaque
                     </span>
-                    <span className="mx-2">•</span>
-                    <span>{destaquePrincipal.data || "Hoje"}</span>
+                    <h2 className="text-2xl md:text-3xl font-bold mt-2">
+                      {destaquePrincipal.titulo}
+                    </h2>
+                    <p className="mt-2 text-neutral-100">{destaquePrincipal.subtitulo}</p>
+                    <div className="flex items-center mt-4 text-sm">
+                      <span className="bg-black/20 px-2 py-1 rounded">
+                        Por {destaquePrincipal.autor || "Redação"}
+                      </span>
+                      <span className="mx-2">•</span>
+                      <span>{destaquePrincipal.data || "Hoje"}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </Link>
             </section>
           )
         }
 
-
         {/* Grid de Notícias em Destaque */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {outrosDestaques.map((noticia) => (
-            <article
-              key={noticia.id}
-              className="bg-white rounded-2xl shadow-sm hover:shadow-md overflow-hidden transition-shadow"
+            <Link
+              to={`/noticias/${noticia.id}`}
             >
-              <div
-                className="h-48 bg-cover bg-center"
-                style={{
-                  backgroundImage: `url(${noticia.imagem || '/fallback.jpg'})`,
-                }}
-              ></div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold mb-2">{noticia.titulo}</h3>
-                <p className="text-neutral-600 mb-4">{noticia.subtitulo}</p>
-                <div className="flex justify-between items-center text-sm text-neutral-500">
-                  <span>{noticia.data || "Hoje"}</span>
-                  <span className="font-medium text-emerald-700">Leia mais →</span>
+              <article
+                key={noticia.id}
+                className="bg-white rounded-2xl shadow-sm hover:shadow-md overflow-hidden transition-shadow"
+              >
+                <div
+                  className="h-48 bg-cover bg-center"
+                  style={{
+                    backgroundImage: `url(${noticia.imagem || '/fallback.jpg'})`,
+                  }}
+                ></div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold mb-2">{noticia.titulo}</h3>
+                  <p className="text-neutral-600 mb-4">{noticia.subtitulo}</p>
+                  <div className="flex justify-between items-center text-sm text-neutral-500">
+                    <span>{noticia.data || "Hoje"}</span>
+                    <span className="font-medium text-emerald-700">Leia mais →</span>
+                  </div>
                 </div>
-              </div>
-            </article>
+              </article>
+            </Link>
           ))}
         </div>
-
         {/* Seção de Últimas Notícias */}
         <UltimasNoticias />
 
