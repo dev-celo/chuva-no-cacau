@@ -1,21 +1,15 @@
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 export default function ValorCacau() {
-  // Exemplos fictícios de dados (substituir depois por API ou banco de dados)
-  const valorDoDia = "R$ 850,00 / arroba";
-  const historicoSemana = [
-    { dia: "Segunda", valor: "R$ 845,00" },
-    { dia: "Terça", valor: "R$ 850,00" },
-    { dia: "Quarta", valor: "R$ 852,00" },
-    { dia: "Quinta", valor: "R$ 848,00" },
-    { dia: "Sexta", valor: "R$ 850,00" },
-  ];
-  const historicoMes = [
-    { semana: "Semana 1", media: "R$ 840,00" },
-    { semana: "Semana 2", media: "R$ 845,00" },
-    { semana: "Semana 3", media: "R$ 850,00" },
-    { semana: "Semana 4", media: "R$ 848,00" },
-  ];
+  const [valoresCacau, setValoresCacau] = useState()
+
+  useEffect(() => {
+    fetch("http://localhost:3001/api/preco-cacau")
+    .then((res) => res.json())
+    .then((data) => setValoresCacau(data))
+  }, [])
+  console.log(valoresCacau);
 
   return (
     <section className="px-6 md:px-16 py-20 bg-gradient-to-br from-emerald-50 to-emerald-100">
@@ -43,7 +37,7 @@ export default function ValorCacau() {
           className="bg-emerald-700 text-white rounded-2xl shadow-lg p-8 text-center"
         >
           <h2 className="text-2xl font-bold mb-2">Valor do Dia</h2>
-          <p className="text-4xl font-extrabold">{valorDoDia}</p>
+          <p className="text-4xl font-extrabold">{valoresCacau?.valorDoDia}</p>
         </motion.div>
 
         {/* Histórico da Semana */}
@@ -58,7 +52,7 @@ export default function ValorCacau() {
                 </tr>
               </thead>
               <tbody>
-                {historicoSemana.map((item, i) => (
+                {valoresCacau?.historicoDaSemana.map((item, i) => (
                   <tr
                     key={i}
                     className="border-t border-emerald-100 hover:bg-emerald-50"
@@ -84,7 +78,7 @@ export default function ValorCacau() {
                 </tr>
               </thead>
               <tbody>
-                {historicoMes.map((item, i) => (
+                {valoresCacau?.historicoDoMes.map((item, i) => (
                   <tr
                     key={i}
                     className="border-t border-emerald-100 hover:bg-emerald-50"
